@@ -1,0 +1,58 @@
+# 🍷 Vinheria Agnello - Checkpoint IoT (ESP32 + MQTT)
+
+Projeto desenvolvido para monitoramento inteligente de temperatura, umidade e luminosidade em ambiente de adega, utilizando ESP32 e protocolo MQTT.
+
+## 👥 Integrantes do Grupo
+Nicolas Ramalho - RM 572939
+João Arruda - RM 570342
+Diogo Bittar - RM 569657
+Vitor Viaro - RM 569804
+Lucas lima - RM 572047
+
+---
+
+## 🛠️ Componentes Utilizados
+- **ESP32** (Microcontrolador com Wi-Fi integrado)
+- **Sensor DHT11** (Temperatura e Umidade)
+- **LDR (Light Dependent Resistor)** (Sensor de Luminosidade)
+- **Resistor de 10kΩ** (para o divisor de tensão do LDR)
+- **Protoboard e Jumpers**
+
+---
+
+## 🔌 Esquema de Conexões (Pinout)
+
+| Componente | Pino do Componente | Pino ESP32 |
+| :--- | :--- | :--- |
+| **DHT11** | VCC | 3.3V / 5V |
+| **DHT11** | GND | GND |
+| **DHT11** | DATA | GPIO 4 |
+| **LDR** | VCC / Pino 1 | 3.3V |
+| **LDR** | Sinal / Pino 2 (com Resistor) | GPIO 34 (ADC) |
+
+---
+
+## 🚀 Instruções de Execução
+
+1. **Pré-requisitos:**
+   - Instalar a **Arduino IDE**.
+   - Instalar o suporte à placa **ESP32**.
+   - Instalar as bibliotecas `DHT sensor library` e `PubSubClient`.
+
+2. **Configuração do Código:**
+   - Abra o arquivo `.ino` na Arduino IDE.
+   - Altere as variáveis `ssid` e `password` com os dados da sua rede Wi-Fi.
+   - Verifique o endereço do servidor MQTT (`mqtt_server`).
+
+3. **Compilação e Upload:**
+   - Conecte o ESP32 ao computador via USB.
+   - Selecione a placa correta (*ESP32 Dev Module*) e a porta COM correspondente.
+   - Clique em **Carregar (Upload)**.
+
+4. **Monitoramento via MyMQTT:**
+   - Abra o aplicativo **MyMQTT** no Android.
+   - Conecte-se ao broker MQTT configurado.
+   - Inscreva-se (*Subscribe*) nos tópicos:
+     - `vinheria/agnello/temperatura`
+     - `vinheria/agnello/umidade`
+     - `vinheria/agnello/luminosidade`
