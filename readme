@@ -1,58 +1,69 @@
-# 🍷 Vinheria Agnello - Checkpoint IoT (ESP32 + MQTT)
+# Edge Computing & Computer Systems - Checkpoint 05
+**O Caso da Vinheria Agnello - Fase 2 (IoT & Mercado Europeu)**
 
-Projeto desenvolvido para monitoramento inteligente de temperatura, umidade e luminosidade em ambiente de adega, utilizando ESP32 e protocolo MQTT.
-
-## 👥 Integrantes do Grupo
-Nicolas Ramalho - RM 572939
-João Arruda - RM 570342
-Diogo Bittar - RM 569657
-Vitor Viaro - RM 569804
-Lucas lima - RM 572047
-
----
-
-## 🛠️ Componentes Utilizados
-- **ESP32** (Microcontrolador com Wi-Fi integrado)
-- **Sensor DHT11** (Temperatura e Umidade)
-- **LDR (Light Dependent Resistor)** (Sensor de Luminosidade)
-- **Resistor de 10kΩ** (para o divisor de tensão do LDR)
-- **Protoboard e Jumpers**
+## 👥 Integrantes do Grupo (Turma 1ESPQ)
+* Nicolas Ramalho - RM 572939
+* João Arruda - RM 570342
+* Diogo Bittar - RM 569657
+* Vitor Viaro - RM 569804
+* Lucas Lima - RM 572047
 
 ---
 
-## 🔌 Esquema de Conexões (Pinout)
+## 🍷 Descrição do Projeto
+Este projeto representa a segunda fase do sistema de monitoramento IoT para a **Vinheria Agnello**[cite: 2]. O objetivo é adequar a infraestrutura tecnológica da vinheria para expansão no mercado europeu, utilizando o ecossistema de negócios da União Europeia (Smart Data Models) e a plataforma FIWARE[cite: 3, 5, 6].
 
-| Componente | Pino do Componente | Pino ESP32 |
-| :--- | :--- | :--- |
-| **DHT11** | VCC | 3.3V / 5V |
-| **DHT11** | GND | GND |
-| **DHT11** | DATA | GPIO 4 |
-| **LDR** | VCC / Pino 1 | 3.3V |
-| **LDR** | Sinal / Pino 2 (com Resistor) | GPIO 34 (ADC) |
+O sistema utiliza um microcontrolador **ESP32** para coletar dados ambientais cruciais para a conservação de vinhos: **Temperatura**, **Umidade** e **Luminosidade**[cite: 4, 11]. Os dados coletados possuem *timestamp* e são enviados via rede Wi-Fi para um back-end FIWARE utilizando o protocolo **MQTT** e padronização **NGSIv2**, permitindo o armazenamento histórico e a visualização no aplicativo **MyMQTT**[cite: 6, 7, 11].
+
+### 📊 Parâmetros de Controle (Regras de Negócio)
+Para manter a integridade dos vinhos, o sistema monitora se o ambiente está dentro dos seguintes parâmetros ideais[cite: 4]:
+* **Temperatura:** Ideal de ~13°C (Variações maiores que 3°C são prejudiciais).
+* **Umidade:** Ideal em 70% (Aceitável entre 60% e 80%).
+* **Luminosidade:** Penumbra/Luz suave (Proteção contra raios UV para evitar alterações orgânicas).
 
 ---
 
-## 🚀 Instruções de Execução
+## 🛠️ Componentes Utilizados (Hardware)
+* 1x Microcontrolador **ESP32** (ESP32-WROOM-32D)[cite: 9, 10]
+* 1x Sensor de Temperatura e Umidade **DHT11**[cite: 10, 11]
+* 1x Sensor de Luminosidade **LDR** (Fotoresistor)[cite: 10, 11]
+* Protoboard e Jumpers para conexão[cite: 10]
 
-1. **Pré-requisitos:**
-   - Instalar a **Arduino IDE**.
-   - Instalar o suporte à placa **ESP32**.
-   - Instalar as bibliotecas `DHT sensor library` e `PubSubClient`.
+## 💻 Requisitos de Software e Plataformas
+* **Arduino IDE** (ou VSCode com PlatformIO) para desenvolvimento e upload do código.
+* Bibliotecas: `WiFi.h`, `PubSubClient` (para MQTT) e bibliotecas específicas do sensor `DHT`.
+* **FIWARE**: Instância rodando os componentes Orion Context Broker, IoT Agent MQTT e MongoDB[cite: 8].
+* **MyMQTT**: Aplicativo mobile utilizado para leitura e escrita dos dados via tópicos MQTT[cite: 11, 12].
 
-2. **Configuração do Código:**
-   - Abra o arquivo `.ino` na Arduino IDE.
-   - Altere as variáveis `ssid` e `password` com os dados da sua rede Wi-Fi.
-   - Verifique o endereço do servidor MQTT (`mqtt_server`).
+---
 
-3. **Compilação e Upload:**
-   - Conecte o ESP32 ao computador via USB.
-   - Selecione a placa correta (*ESP32 Dev Module*) e a porta COM correspondente.
-   - Clique em **Carregar (Upload)**.
+## 🚀 Instruções para Replicação (Passo a Passo)
 
-4. **Monitoramento via MyMQTT:**
-   - Abra o aplicativo **MyMQTT** no Android.
-   - Conecte-se ao broker MQTT configurado.
-   - Inscreva-se (*Subscribe*) nos tópicos:
-     - `vinheria/agnello/temperatura`
-     - `vinheria/agnello/umidade`
-     - `vinheria/agnello/luminosidade`
+### 1. Montagem do Hardware
+1. Conecte o **DHT11** ao ESP32: VCC no 3V3, GND no GND e o pino de DADOS na respectiva porta digital configurada no código[cite: 10].
+2. Conecte o **LDR** ao ESP32 utilizando um divisor de tensão com um resistor (ex: 10kΩ). Conecte a saída a um pino analógico do ESP32[cite: 10].
+
+### 2. Configuração do Back-end (FIWARE)
+1. Certifique-se de que a stack do FIWARE (Docker) está ativa no seu servidor/máquina local, com o broker MQTT operando na porta `1883`[cite: 8].
+2. Provisione o dispositivo (ESP32) no IoT Agent utilizando o padrão NGSIv2.
+
+### 3. Configuração do Código (.ino)
+1. Abra o arquivo fonte principal do projeto na Arduino IDE.
+2. Localize as variáveis de rede e insira as credenciais do seu **Wi-Fi** (SSID e Senha).
+3. Localize as configurações do **MQTT** e insira o IP público ou local do seu servidor FIWARE.
+4. Compile e faça o upload do código para o seu ESP32.
+
+### 4. Monitoramento pelo MyMQTT
+1. Instale o aplicativo **MyMQTT** no seu smartphone[cite: 11].
+2. Conecte o MyMQTT ao mesmo Broker (IP do servidor FIWARE, porta 1883).
+3. Vá até a aba "Subscribe" e adicione os tópicos de publicação do ESP32 (ex: `/tef/+/attrs/temperatura`, `/tef/+/attrs/umidade`, `/tef/+/attrs/luminosidade`).
+4. Os dados em tempo real começarão a aparecer com seus respectivos *timestamps*[cite: 7].
+
+---
+
+## 📁 Estrutura de Arquivos
+* `codigo_fonte.ino`: Código em C++ a ser gravado no ESP32.
+* *(Adicione aqui o nome de outros arquivos caso tenham esquemas elétricos em PDF ou scripts JSON de provisionamento)*.
+
+---
+*Projeto acadêmico desenvolvido para a disciplina de Edge Computing & Computer Systems - FIAP (Prof. Lucas Demetrius Augusto).*[cite: 2]
